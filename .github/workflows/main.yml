@@ -1,0 +1,142 @@
+name: SADEE SOLUTIONS STORE - Extract & Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  extract:
+    name: Extract Store ZIP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Find ZIP file
+        id: zip
+        shell: bash
+        run: |
+          set -e
+
+          ZIP_FILE=$(find . -maxdepth 1 -type f -iname "*.zip" | head -n 1)
+
+          if [ -z "$ZIP_FILE" ]; then
+            echo "ERROR: No ZIP file found in repository root."
+            exit 1
+          fi
+
+          echo "ZIP found: $ZIP_FILE"
+          echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Extract ZIP
+        shell: bash
+        run: |
+          set -e
+
+          mkdir -p extracted
+
+          unzip -o "${{ steps.zip.outputs.zip_file }}" -d extracted
+
+          echo "Extracted files:"
+          find extracted -maxdepth 3 -type f | sort
+
+      - name: Detect project folder
+        id: project
+        shell: bash
+        run: |
+          set -e
+
+          if [ -f "extracted/index.html" ]; then
+            PROJECT_DIR="extracted"
+          else
+            PROJECT_DIR=$(find extracted -type f -name "index.html" -printf '%h\n' | head -n 1)
+
+            if [ -z "$PROJECT_DIR" ]; then
+              echo "ERROR: index.html not found inside ZIP."
+              exit 1
+            fi
+          fi
+
+          echo "Website folder: $PROJECT_DIR"
+          echo "project_dir=$PROJECT_DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Copy website to repository root
+        shell: bash
+        run: |
+          set -e
+
+          PROJECT_DIR="${{ steps.project.outputs.project_dir }}"
+
+          # Keep GitHub metadata/workflow files
+          find . -maxdepth 1 -type f \
+            ! -name "*.zip" \
+            ! -name ".gitignore" \
+            -delete || true
+
+          # Remove old website folders/files
+          rm -rf admin assets
+
+          # Copy extracted website
+          cp -a "$PROJECT_DIR"/. .
+
+          # Remove temporary extraction directory
+          rm -rf extracted
+
+          echo "Final repository files:"
+          find . -maxdepth 3 -type f \
+            ! -path "./.git/*" | sort
+
+      - name: Remove uploaded ZIP
+        shell: bash
+        run: |
+          rm -f ./*.zip
+
+      - name: Commit extracted website
+        shell: bash
+        run: |
+          set -e
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Extract SADEE SOLUTIONS STORE"
+            git push
+          fi
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: extract
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout updated repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload website artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
