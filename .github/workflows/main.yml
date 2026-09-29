@@ -1,81 +1,63 @@
-name: SADEE SOLUTIONS STORE - Extract ZIP
+name: SADEE SOLUTIONS STORE
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  extract:
+  check-store:
+    name: Check Store Files
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Find ZIP
-        id: zip
+      - name: Check website
         run: |
-          ZIP=$(find . -maxdepth 1 -type f -iname "*.zip" | head -n 1)
+          set -e
 
-          if [ -z "$ZIP" ]; then
-            echo "❌ ZIP file not found."
+          echo "===== SADEE SOLUTIONS STORE ====="
+
+          if [ ! -f "index.html" ]; then
+            echo "❌ index.html not found"
             exit 1
           fi
 
-          echo "✅ ZIP found: $ZIP"
-          echo "zip=$ZIP" >> "$GITHUB_OUTPUT"
+          echo "✅ index.html found"
 
-      - name: Extract ZIP
-        run: |
-          rm -rf extracted
-          mkdir extracted
-
-          unzip -o "${{ steps.zip.outputs.zip }}" -d extracted
-
-          echo "✅ ZIP extracted successfully."
-
-      - name: Find website
-        id: website
-        run: |
-          if [ -f extracted/index.html ]; then
-            echo "folder=extracted" >> "$GITHUB_OUTPUT"
-          else
-            FOLDER=$(find extracted -type f -name "index.html" -printf '%h\n' | head -n 1)
-
-            if [ -z "$FOLDER" ]; then
-              echo "❌ index.html not found."
-              exit 1
-            fi
-
-            echo "folder=$FOLDER" >> "$GITHUB_OUTPUT"
+          if [ -f "styles.css" ]; then
+            echo "✅ styles.css found"
           fi
 
-      - name: Copy website files
-        run: |
-          FOLDER="${{ steps.website.outputs.folder }}"
-
-          cp -a "$FOLDER"/. .
-
-          rm -rf extracted
-
-          # Keep the ZIP in GitHub
-          echo "✅ Website files extracted."
-          echo "✅ ZIP kept in repository."
-
-      - name: Commit extracted files
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add -A
-
-          if git diff --cached --quiet; then
-            echo "No changes."
-          else
-            git commit -m "Extract SADEE SOLUTIONS STORE"
-            git push
+          if [ -f "app.js" ]; then
+            echo "✅ app.js found"
           fi
+
+          if [ -f "config.js" ]; then
+            echo "✅ config.js found"
+          fi
+
+          if [ -d "admin" ]; then
+            echo "✅ admin folder found"
+          fi
+
+          if [ -d "assets" ]; then
+            echo "✅ assets folder found"
+          fi
+
+          echo ""
+          echo "===== WEBSITE FILES ====="
+          find . -maxdepth 3 -type f \
+            ! -path "./.git/*" \
+            | sort
+
+          echo ""
+          echo "================================"
+          echo "✅ SADEE SOLUTIONS STORE READY"
+          echo "================================"
