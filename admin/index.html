@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SADEE Admin</title><link rel="stylesheet" href="admin.css"></head>
+<body>
+<div id="login" class="login"><div class="panel"><div class="logo">S</div><h1>SADEE ADMIN</h1><p>Private store management</p><input id="email" type="email" placeholder="Admin email"><input id="password" type="password" placeholder="Password"><button id="loginBtn">LOGIN</button><div id="loginMsg"></div></div></div>
+<div id="app" class="hidden">
+<header><b>SADEE <span>SOLUTIONS</span></b><div><button id="newBtn">＋ Add Product</button><button id="logout">Logout</button></div></header>
+<main><div class="stats"><div><small>PRODUCTS</small><b id="count">0</b></div><div><small>ACTIVE</small><b id="activeCount">0</b></div><div><small>ORDERS</small><b id="orderCount">0</b></div></div>
+<section><div class="head"><h2>Products</h2><input id="adminSearch" placeholder="Search…"></div><div id="table"></div></section>
+<section><div class="head"><h2>Orders</h2></div><div id="orders"></div></section>
+</main></div>
+<div id="modal" class="modal"><div class="form"><button class="x" id="close">×</button><h2 id="formTitle">Add Product</h2><input type="hidden" id="pid"><label>Name<input id="pname"></label><label>Category<input id="pcat" placeholder="Gaming / Development"></label><label>Price (LKR)<input id="pprice" type="number"></label><label>Price note<input id="pnote" placeholder="Lifetime / 7 day key etc."></label><label>Description<textarea id="pdesc"></textarea></label><label>Features (one per line)<textarea id="pfeatures"></textarea></label><label>Product image<input id="pimage" type="file" accept="image/*"></label><label>Current image URL<input id="pimageurl"></label><label class="check"><input id="pfeatured" type="checkbox"> Featured</label><label class="check"><input id="pactive" type="checkbox" checked> Active / visible</label><button id="save">SAVE PRODUCT</button><div id="saveMsg"></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../config.js"></script><script src="admin.js"></script></body></html>

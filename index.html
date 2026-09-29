@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090909">
+<title>SADEE SOLUTIONS — Digital Store</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./"><span class="brand-mark">S</span><span>SADEE <b>SOLUTIONS</b></span></a>
+  <nav>
+    <a href="#shop">Shop</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button class="icon-btn" id="menuBtn">☰</button>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">DIGITAL PRODUCTS • APPS • TOOLS</span>
+    <h1>Build your digital edge with <em>SADEE</em>.</h1>
+    <p>Premium apps, optimizer systems and custom digital solutions from SADEE SOLUTIONS.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#shop">Explore Products</a>
+      <a class="btn ghost" href="https://wa.me/94768472404" target="_blank" rel="noopener">WhatsApp Us</a>
+    </div>
+  </div>
+  <div class="hero-media">
+    <video src="assets/showcase.mp4" autoplay muted loop playsinline></video>
+    <div class="hero-glow"></div>
+  </div>
+</section>
+
+<section class="trust-row">
+  <div><b>⚡ Instant Order</b><span>Order directly on WhatsApp</span></div>
+  <div><b>📱 Mobile Ready</b><span>Products for Android / iOS</span></div>
+  <div><b>🔐 Secure Access</b><span>Activation keys where applicable</span></div>
+</section>
+
+<section id="shop" class="shop">
+  <div class="section-head">
+    <div><span class="eyebrow">OUR STORE</span><h2>Digital products</h2></div>
+    <div class="tools"><input id="search" placeholder="Search products…"><select id="category"><option value="">All categories</option></select></div>
+  </div>
+  <div id="status" class="status">Loading products…</div>
+  <div id="products" class="grid"></div>
+</section>
+
+<section id="about" class="about">
+  <div><span class="eyebrow">SADEE SOLUTIONS</span><h2>Apps, websites & digital innovation.</h2></div>
+  <p>SADEE SOLUTIONS creates mobile applications, custom websites, cloud-connected systems and digital tools. This store is built so products, prices, images and availability can be managed from a private admin panel.</p>
+</section>
+
+<section id="contact" class="contact">
+  <div><span class="eyebrow">NEED HELP?</span><h2>Talk to SADEE.</h2><p>Have a question before buying? Send a WhatsApp message and we will reply.</p></div>
+  <a class="btn primary" href="https://wa.me/94768472404" target="_blank" rel="noopener">Chat on WhatsApp</a>
+</section>
+</main>
+
+<footer>© 2026 SADEE SOLUTIONS · App & Website Development</footer>
+
+<div id="drawer" class="drawer"><div class="drawer-card"><button id="closeDrawer" class="close">×</button><div id="detail"></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
